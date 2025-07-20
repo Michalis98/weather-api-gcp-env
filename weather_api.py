@@ -10,6 +10,7 @@ app = FastAPI(title="Weather Forecast API")
 engine = create_engine("sqlite:///weather.db")
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
+# Liast all Locations
 @app.get("/locations")
 def get_locations():
     session = SessionLocal()
@@ -18,7 +19,7 @@ def get_locations():
         return [{"id": loc.id, "name": loc.name, "latitude": loc.latitude, "longitude": loc.longitude} for loc in locations]
     finally:
         session.close()
-
+# Latest forecast for each location
 @app.get("/forecasts/latest")
 def get_latest_forecasts():
     session = SessionLocal()
@@ -31,7 +32,7 @@ def get_latest_forecasts():
         return latest_forecasts
     finally:
         session.close()
-
+# Average of last 3 forecasts
 @app.get("/forecasts/averages")
 def get_averages():
     session = SessionLocal()
@@ -48,7 +49,7 @@ def get_averages():
         return results
     finally:
         session.close()
-
+#  Top N locations by metric
 @app.get("/top/{metric}")
 def get_top(metric: str, n: int = Query(3, gt=0)):
     session = SessionLocal()

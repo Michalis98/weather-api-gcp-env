@@ -17,7 +17,7 @@ LOCATIONS = [
 ]
 
 Base = declarative_base()
-
+# Init 2 tables, 1 for loactions another for forecast
 class Location(Base):
     __tablename__ = "locations"
     id = Column(Integer, primary_key=True)
@@ -34,11 +34,13 @@ class Forecast(Base):
     temperature = Column(Float)
     location = relationship("Location", back_populates="forecasts")
 
+# Create DB
 engine = create_engine("sqlite:///weather.db")
 Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
 session = Session()
 
+# Creating the req to iterate for 7 days and fetch the forecast
 start_date = datetime.utcnow().date()
 end_date = start_date + timedelta(days=6)
 interval = "PT24H"
